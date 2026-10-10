@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Halyard coach ticket terminal. Price a route for adults and children, then watch the slip eject onto the counter."
+    />
+    <title>Halyard — Coach Ticket Terminal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,560;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="stage">
+      <div class="scaler" id="scaler">
+      <div class="fit" id="fit">
+        <p class="scene-label">
+          <span>King Street Depot</span>
+          Window 04 · coach tickets
+        </p>
+        <div class="counter" id="counter">
+          <div class="machine" id="machine" data-phase="ready">
+            <div class="chassis">
+              <div class="topline">
+                <div class="wordmark">
+                  <span class="badge" aria-hidden="true">H</span>
+                  <div>
+                    <strong>HALYARD</strong>
+                    <small>Coach ticket terminal · LH-40</small>
+                  </div>
+                </div>
+                <ul class="lamps" aria-hidden="true">
+                  <li><i id="lamp-power" class="lamp is-on"></i><span>Power</span></li>
+                  <li><i id="lamp-link" class="lamp is-on"></i><span>Link</span></li>
+                  <li><i id="lamp-feed" class="lamp"></i><span>Feed</span></li>
+                </ul>
+              </div>
+
+              <div class="bezel">
+                <span class="screw screw-tl" aria-hidden="true"></span>
+                <span class="screw screw-tr" aria-hidden="true"></span>
+                <span class="screw screw-bl" aria-hidden="true"></span>
+                <span class="screw screw-br" aria-hidden="true"></span>
+                <div class="screen">
+                  <header class="screen-bar">
+                    <span>POS 04</span>
+                    <time id="clock" datetime="">--:--:--</time>
+                    <span id="status" class="status" data-phase="ready">READY</span>
+                  </header>
+                  <div class="screen-body">
+                    <section class="route-panel" aria-label="Route">
+                      <div class="plaque">
+                        <button type="button" id="plaque-from" class="plaque-hit is-picking">
+                          <span>From</span>
+                          <strong>—</strong>
+                          <em>Select a station</em>
+                        </button>
+                        <div class="arrow" aria-hidden="true">→</div>
+                        <button type="button" id="plaque-to" class="plaque-hit">
+                          <span>To</span>
+                          <strong>—</strong>
+                          <em>Select a station</em>
+                        </button>
+                      </div>
+                      <div class="mode" role="tablist" aria-label="Station field">
+                        <button type="button" id="mode-from" role="tab" aria-selected="true">Origin</button>
+                        <button type="button" id="mode-to" role="tab" aria-selected="false">Destination</button>
+                      </div>
+                      <div class="stations" id="stations" role="group" aria-label="Stations"></div>
+                      <div class="departures">
+                        <div class="row-label">
+                          <span>Departure</span>
+                          <div class="day" role="group" aria-label="Travel day">
+                            <button type="button" id="day-today">Today</button>
+                            <button type="button" id="day-tomorrow">Tomorrow</button>
+                          </div>
+                        </div>
+                        <div class="times" id="times" role="group" aria-label="Departure times"></div>
+                      </div>
+                    </section>
+                    <section class="sale-panel" aria-label="Passengers and fare">
+                      <h2>Passengers</h2>
+                      <div class="stepper">
+                        <div>
+                          <strong>Adults</strong>
+                          <small>Full coach fare</small>
+                        </div>
+                        <div class="stepper-keys">
+                          <button type="button" id="adults-dec" aria-label="Fewer adults">−</button>
+                          <output id="adults-count" for="adults-dec adults-inc">0</output>
+                          <button type="button" id="adults-inc" aria-label="More adults">+</button>
+                        </div>
+                      </div>
+                      <div class="stepper">
+                        <div>
+                          <strong>Children</strong>
+                          <small>Half the adult fare</small>
+                        </div>
+                        <div class="stepper-keys">
+                          <button type="button" id="children-dec" aria-label="Fewer children">−</button>
+                          <output id="children-count" for="children-dec children-inc">0</output>
+                          <button type="button" id="children-inc" aria-label="More children">+</button>
+                        </div>
+                      </div>
+                      <div class="fare" id="fare" aria-live="polite">
+                        <p class="fare-kicker" id="fare-kicker">Set a route</p>
+                        <div class="fare-lines" id="fare-lines"></div>
+                        <p class="fare-hint" id="fare-hint">Origin, destination, then adults and children.</p>
+                        <p class="fare-error" id="fare-error" role="alert"></p>
+                        <div class="total">
+                          <span id="total-label">Amount due</span>
+                          <strong id="total">—</strong>
+                        </div>
+                      </div>
+                      <button type="button" class="issue is-cold" id="issue" aria-disabled="true">
+                        Issue ticket
+                      </button>
+                    </section>
+                  </div>
+                  <div class="glass" aria-hidden="true"></div>
+                </div>
+              </div>
+
+              <div class="deck">
+                <button type="button" class="key" id="clear">Clear</button>
+                <button type="button" class="key" id="feed" disabled>Feed</button>
+                <div class="led is-idle" id="led" aria-hidden="true">——</div>
+                <button type="button" class="key key-issue is-cold" id="issue-hard" aria-disabled="true">
+                  Issue
+                </button>
+              </div>
+
+              <div class="printer" aria-hidden="true">
+                <div class="lip"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="landing" id="landing">
+            <p class="landing-hint" id="landing-hint">Collect slip</p>
+            <div class="eject">
+              <article class="ticket" id="ticket" aria-hidden="true"></article>
+            </div>
+          </div>
+          <div class="rail" aria-hidden="true"></div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <noscript>
+      <p class="noscript">This terminal needs JavaScript to price and issue tickets.</p>
+    </noscript>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
