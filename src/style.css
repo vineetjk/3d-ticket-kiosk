@@ -973,6 +973,29 @@ button:focus-visible {
     align-items: stretch;
     perspective: none;
     overflow: visible;
+    padding: 8px;
+  }
+
+  .scene-label {
+    letter-spacing: 0.08em;
+    font-size: 10px;
+  }
+
+  .counter {
+    padding: 14px 10px 6px;
+  }
+
+  .chassis {
+    padding: 10px 10px 0;
+  }
+
+  .bezel,
+  .screen-body {
+    padding: 10px;
+  }
+
+  #landing {
+    scroll-margin-bottom: 48px;
   }
 
   .screen-body,
@@ -980,14 +1003,66 @@ button:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .screen-body > *,
+  .route-panel,
+  .sale-panel,
+  .departures,
+  .times,
+  .row-label,
+  .stations,
+  .fare-line {
+    min-width: 0;
+  }
+
+  .stations {
+    gap: 6px;
+  }
+
+  .station {
+    min-width: 0;
+    padding: 6px 2px;
+  }
+
+  .station b {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  .station span {
+    font-size: 8px;
+    letter-spacing: -0.02em;
+    max-width: 100%;
+  }
+
+  .day button,
+  .time {
+    min-width: 0;
+    padding-inline: 2px;
+  }
+
+  .time {
+    letter-spacing: 0;
+    font-size: 12px;
+  }
+
   .led {
     justify-self: stretch;
     order: -1;
+    min-width: 0;
+  }
+
+  .key,
+  .key-issue {
+    min-width: 0;
   }
 
   .wordmark strong {
     letter-spacing: 0.08em;
     font-size: 18px;
+  }
+
+  .wordmark small {
+    letter-spacing: 0.04em;
   }
 
   .plaque-hit strong {

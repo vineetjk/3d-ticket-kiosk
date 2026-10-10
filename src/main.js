@@ -227,7 +227,7 @@ function render() {
     el.led.classList.add("is-idle");
   } else {
     const when = travelDate();
-    el.fareKicker.textContent = `${formatTicketDate(when)} · ${state.departure} · ${priced.km} km · coach ${String(priced.coach).padStart(2, "0")}`;
+    el.fareKicker.textContent = `${formatTicketDate(when)} · ${state.departure} · ${priced.km} km · bus ${String(priced.coach).padStart(2, "0")}`;
     el.fareLines.innerHTML = [
       fareLine("Adult", `${priced.adultCount} × ${money(priced.adult)}`, money(priced.adultTotal)),
       fareLine("Child", `${priced.childCount} × ${money(priced.child)}`, money(priced.childTotal)),
@@ -321,7 +321,7 @@ function explainBlock() {
 
 function makeId() {
   const n = Math.floor(100000 + Math.random() * 900000);
-  return `HL-${n}`;
+  return `BM-${n}`;
 }
 
 function barcode(id) {
@@ -341,15 +341,15 @@ function ticketMarkup(ticket) {
   return `
     <header class="t-head">
       <div>
-        <p class="t-brand">HALYARD</p>
-        <p class="t-sub">King Street Depot · Window 04</p>
+        <p class="t-brand">BMTC</p>
+        <p class="t-sub">Kempegowda Bus Station · Majestic</p>
       </div>
       <p class="t-paid">Paid</p>
     </header>
     <p class="t-id">${ticket.id}</p>
     <div class="t-row"><span>Issued</span><b>${ticket.issuedLabel}</b></div>
     <div class="t-row"><span>Travel</span><b>${ticket.travelLabel}</b></div>
-    <div class="t-row"><span>Coach</span><b>${coach} · open seating</b></div>
+    <div class="t-row"><span>Bus</span><b>${coach} · open seating</b></div>
     <div class="t-route">
       <div><span>${ticket.fromCode}</span><strong>${ticket.fromName}</strong></div>
       <b aria-hidden="true">→</b>
@@ -436,6 +436,7 @@ async function issue() {
   }
   state.busy = true;
   state.error = "";
+  scrollToPrinter();
   if (state.ticketOut) {
     state.ticketOut = false;
     render();
@@ -492,7 +493,21 @@ async function clearSale() {
   render();
 }
 
+function scrollToPrinter() {
+  if (window.innerWidth >= 860) return;
+  const landing = document.querySelector("#landing");
+  if (!landing) return;
+  landing.scrollIntoView({
+    behavior: motionOK() ? "smooth" : "auto",
+    block: "end",
+  });
+}
+
 function revealTicket() {
+  if (window.innerWidth < 860) {
+    scrollToPrinter();
+    return;
+  }
   const rect = el.ticket.getBoundingClientRect();
   if (rect.bottom > window.innerHeight - 8 || rect.top < 0) {
     el.ticket.scrollIntoView({
@@ -518,7 +533,7 @@ function tickClock() {
   el.clock.textContent = now.toLocaleTimeString("en-GB", { hour12: false });
 }
 
-const pose = { scale: 1, rx: 9, ry: -13 };
+const pose = { scale: 1 };
 
 function resetFit() {
   for (const prop of ["transform", "position", "top", "left", "width", "transformOrigin"]) {
@@ -527,12 +542,10 @@ function resetFit() {
   el.scaler.style.width = "";
   el.scaler.style.height = "";
   pose.scale = 1;
-  pose.rx = 9;
-  pose.ry = -13;
 }
 
 function applyPose() {
-  el.fit.style.transform = `scale(${pose.scale}) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg)`;
+  el.fit.style.transform = `scale(${pose.scale})`;
 }
 
 function fit() {
@@ -541,10 +554,6 @@ function fit() {
   const naturalW = el.fit.offsetWidth;
   const naturalH = el.fit.offsetHeight;
   if (!naturalW || !naturalH) return;
-  if (!motionOK()) {
-    pose.rx = 0;
-    pose.ry = 0;
-  }
   el.fit.style.position = "absolute";
   el.fit.style.width = `${naturalW}px`;
   el.fit.style.left = "0px";
@@ -622,14 +631,6 @@ function bind() {
     void clearSale();
   });
 
-  window.addEventListener("pointermove", (event) => {
-    if (window.innerWidth < 860 || !motionOK()) return;
-    const x = event.clientX / window.innerWidth - 0.5;
-    const y = event.clientY / window.innerHeight - 0.5;
-    pose.rx = 9 - y * 2;
-    pose.ry = -13 + x * 3;
-    applyPose();
-  });
   window.addEventListener("resize", fit);
 }
 

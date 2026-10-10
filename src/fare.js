@@ -1,46 +1,46 @@
-/** Coach fare rules for the Halyard ticket terminal. */
+/** Fare rules for the BMTC ticket terminal at Majestic. */
 
 export const STATIONS = [
-  { code: "SEA", name: "Seattle" },
-  { code: "PDX", name: "Portland" },
-  { code: "SFO", name: "San Francisco" },
-  { code: "SAC", name: "Sacramento" },
-  { code: "LAX", name: "Los Angeles" },
-  { code: "SAN", name: "San Diego" },
-  { code: "LAS", name: "Las Vegas" },
-  { code: "PHX", name: "Phoenix" },
+  { code: "MJS", name: "Majestic" },
+  { code: "SVJ", name: "Shivajinagar" },
+  { code: "JYN", name: "Jayanagar" },
+  { code: "BSK", name: "Banashankari" },
+  { code: "HBL", name: "Hebbal" },
+  { code: "WFD", name: "Whitefield" },
+  { code: "ELC", name: "Electronic City" },
+  { code: "YPR", name: "Yeshwanthpur" },
 ];
 
-/** Road kilometres between station codes. Keys are sorted pairs. */
+/** Approximate road kilometres between BMTC points. Keys are sorted pairs. */
 const KILOMETERS = {
-  "LAS-LAX": 435,
-  "LAS-PDX": 1540,
-  "LAS-PHX": 478,
-  "LAS-SAC": 790,
-  "LAS-SAN": 520,
-  "LAS-SEA": 1744,
-  "LAS-SFO": 920,
-  "LAX-PDX": 1536,
-  "LAX-PHX": 598,
-  "LAX-SAC": 616,
-  "LAX-SAN": 194,
-  "LAX-SEA": 1829,
-  "LAX-SFO": 615,
-  "PDX-PHX": 2090,
-  "PDX-SAC": 924,
-  "PDX-SAN": 1720,
-  "PDX-SEA": 278,
-  "PDX-SFO": 1016,
-  "PHX-SAC": 1190,
-  "PHX-SAN": 568,
-  "PHX-SEA": 2290,
-  "PHX-SFO": 1205,
-  "SAC-SAN": 840,
-  "SAC-SEA": 1210,
-  "SAC-SFO": 140,
-  "SAN-SEA": 2014,
-  "SAN-SFO": 808,
-  "SEA-SFO": 1296,
+  "BSK-ELC": 12,
+  "BSK-HBL": 17,
+  "BSK-JYN": 4,
+  "BSK-MJS": 9,
+  "BSK-SVJ": 12,
+  "BSK-WFD": 24,
+  "BSK-YPR": 13,
+  "ELC-HBL": 27,
+  "ELC-JYN": 14,
+  "ELC-MJS": 18,
+  "ELC-SVJ": 20,
+  "ELC-WFD": 28,
+  "ELC-YPR": 24,
+  "HBL-JYN": 16,
+  "HBL-MJS": 10,
+  "HBL-SVJ": 9,
+  "HBL-WFD": 18,
+  "HBL-YPR": 8,
+  "JYN-MJS": 8,
+  "JYN-SVJ": 10,
+  "JYN-WFD": 20,
+  "JYN-YPR": 12,
+  "MJS-SVJ": 3,
+  "MJS-WFD": 22,
+  "MJS-YPR": 6,
+  "SVJ-WFD": 20,
+  "SVJ-YPR": 8,
+  "WFD-YPR": 22,
 };
 
 const MINUTES_OPEN = 6 * 60;
@@ -60,13 +60,13 @@ export function kilometers(from, to) {
 }
 
 /**
- * Adult fare is $8 boarding plus 8.5¢ per kilometre, rounded to the
- * nearest dollar, with an $18 floor. A child ticket is half of that,
- * rounded to the nearest dollar.
+ * Adult fare is ₹10 boarding plus ₹2.50 per kilometre, rounded to the
+ * rupee, and never below ₹15. A child ticket is half of that, rounded
+ * to the rupee.
  */
 export function faresForKm(km) {
-  const cents = 800 + Math.round((km * 85) / 10);
-  const adult = Math.max(18, Math.round(cents / 100));
+  const paise = 1000 + km * 250;
+  const adult = Math.max(15, Math.round(paise / 100));
   const child = Math.round(adult / 2);
   return { adult, child };
 }
@@ -136,10 +136,7 @@ export function departureBoard(from, to) {
 }
 
 export function money(amount) {
-  return amount.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
+  return `₹${amount.toLocaleString("en-IN")}`;
 }
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
