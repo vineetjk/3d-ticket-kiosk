@@ -13,6 +13,8 @@ npm run dev
 
 Open [http://127.0.0.1:43123](http://127.0.0.1:43123).
 
+The same build is published with GitHub Pages from `main`: [https://vineetjk.github.io/3d-ticket-kiosk/](https://vineetjk.github.io/3d-ticket-kiosk/). Asset paths are relative, so the site works in that project folder.
+
 ```bash
 npm test
 ```
